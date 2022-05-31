@@ -1,57 +1,115 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="question">
+    <p class="paragraph">Pytanie {{question}}</p>
+    <div id="a" class="question-content">
+      {{questions.question}}
+    </div>
+
+    <div  class="question-box">
+      <div :class="{ background: isBackground }" @click="toggleColor" class="question-answer">
+        {{questions.answer_a}}
+      </div>
+    </div>
+    <div class="question-box">
+      <div class="question-answer">
+        {{questions.answer_b}}
+      </div>
+    </div>
+    <div class="question-box">
+      <div class="question-answer">
+        {{questions.answer_c}}
+      </div>
+    </div>
+    <div class="question-box">
+      <div class="question-answer">
+        {{questions.answer_d}}
+      </div>
+    </div>
+    <button @click="handleBtn" class="btn">wyślij</button>
   </div>
 </template>
-
 <script>
+
 export default {
-  name: 'HelloWorld',
+  name: 'QuestionComponent',
+  data() {
+    return {
+      questions: [],
+      question: 2,
+      isBackground: true,
+      font: {
+        weight: 800,
+      },
+    };
+  },
+  methods: {
+    handleBtn() {
+
+    },
+    toggleColor() {
+      console.log(event.target.id)
+      this.isBackground = !this.isBackground;
+    }
+  },
+  mounted() {
+    fetch(`http://127.0.0.1:8000/api/question/${this.question}`)
+        .then(response => response.json())
+        .then(data => this.questions = data)
+        .catch(err => console.error(err.message))
+  },
+  components: {},
+
   props: {
-    msg: String
-  }
-}
+    numberQuestions: Number,
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.question {
+  width: 100%;
+  height: 80%;
+  background: white;
+
+  .paragraph {
+    font-weight: 700;
+    font-size: 30px;
+    padding-top: 60px;
+  }
+
+  &-content {
+    padding-top: 30px;
+  }
+
+  .question-box {
+    display: flex;
+    justify-content: center;
+    height: 100px;
+    .question-answer {
+      margin-top: 50px;
+      border-radius: 30px;
+      width: 70%;
+      border: 1px dashed red;
+    }
+  }
+
+  .btn {
+    cursor: pointer;
+    width: 100px;
+    height: 40px;
+    color: whitesmoke;
+    border: none;
+    border-radius: 20px;
+    background: #1f23b1;
+    margin-top: 20px
+  }
+
+  .background {
+    background: #42b983;
+  }
+
+
+
 }
 </style>
